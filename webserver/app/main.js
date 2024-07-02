@@ -1,51 +1,31 @@
-// const { Kafka } = require('kafkajs')
-
-// const kafka = new Kafka({
-//     clientId: 'my-app',
-//     brokers: ['kafka_big:9092']
-// })
 const express = require('express');
 const app = express();
 
-app.get('/done', (req, res) => {
-    // senddata('check_cart')
-    res.send('お買い上げどうも\n');
+const routes = [
+    { path: '/', message: 'ホーム画面です\n' },
+    { path: '/about', message: 'これはAboutページです\n' },
+    { path: '/contact', message: 'これはContactページです\n' },
+    { path: '/user/:id', message: 'ユーザーID: :id のプロフィールページです\n', dynamic: true },
+    { path: '/products', message: 'これはProductsページです\n' },
+    { path: '/services', message: 'これはServicesページです\n' },
+    { path: '/blog', message: 'これはBlogページです\n' },
+    { path: '/faq', message: 'これはFAQページです\n' },
+    { path: '/portfolio', message: 'これはPortfolioページです\n' }
+];
+
+routes.forEach(route => {
+    if (route.dynamic) {
+        app.get(route.path, (req, res) => {
+            const message = route.message.replace(':id', req.params.id);
+            res.send(message);
+        });
+    } else {
+        app.get(route.path, (req, res) => {
+            res.send(route.message);
+        });
+    }
 });
 
-app.get('/cart', (req, res) => {
-    // senddata('add_cart')
-    res.send('カートに入りました\n');
+app.listen(3000, () => {
+    console.log('サーバーがポート3000で起動しました');
 });
-
-app.get('/', (req, res) => {
-    // senddata('login')
-    res.send('ログインしました\n');
-});
-
-// function senddata(action) {
-//     let today = new Date();
-
-//     let year = today.getFullYear();
-//     let month = today.getMonth() + 1;
-//     let date = today.getDate();
-//     let date_str = year + '-' + month.toString().padStart(2, "0") + '-' + date;
-
-//     (async () => {
-//         const producer = kafka.producer()
-
-//         await producer.connect()
-//         await producer.send({
-//             topic: 'pyspark-topic',
-//             messages: [
-//                 {
-//                     key: `${date_str}`, "value": `{"name": "yuki_${Date.now()}", "action": "${action}", "sendtime": ${Date.now()}}`
-//                 },
-//             ],
-//         })
-
-//         await producer.disconnect()
-
-//     })()
-// }
-
-app.listen(3000);
