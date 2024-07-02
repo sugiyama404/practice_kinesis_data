@@ -4,8 +4,8 @@ resource "aws_iam_policy_attachment" "ecr_attach" {
   policy_arn = aws_iam_policy.ecr_policy.arn
 }
 
-resource "aws_iam_policy_attachment" "ecs_attach" {
-  name       = "${var.app_name}_ecs_attach"
-  roles      = ["${aws_iam_role.main_role.name}"]
-  policy_arn = aws_iam_policy.ecs_task_policy.arn
+# IAMロールにポリシーをアタッチ
+resource "aws_iam_role_policy_attachment" "lambda_role_attachment" {
+  role       = aws_iam_role.lambda_role.name
+  policy_arn = aws_iam_policy.lambda_policy.arn
 }

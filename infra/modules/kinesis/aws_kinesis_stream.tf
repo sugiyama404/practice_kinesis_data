@@ -1,7 +1,7 @@
-resource "aws_kinesis_stream" "test_stream" {
-  name             = "terraform-kinesis-test"
+resource "aws_kinesis_stream" "main_stream" {
+  name             = "main-stream"
   shard_count      = 1
-  retention_period = 48
+  retention_period = 24
 
   shard_level_metrics = [
     "IncomingBytes",
@@ -13,6 +13,6 @@ resource "aws_kinesis_stream" "test_stream" {
   }
 
   tags = {
-    Environment = "test"
+    Name = "${var.app_name}-kinenis"
   }
 }

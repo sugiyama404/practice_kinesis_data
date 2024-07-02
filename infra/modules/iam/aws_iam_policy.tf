@@ -1,5 +1,5 @@
 resource "aws_iam_policy" "ecr_policy" {
-  name = "${var.app_name}_ecr_policy"
+  name = "${var.app_name}-ecr-policy"
 
   policy = jsonencode({
     Version = "2012-10-17"
@@ -12,5 +12,34 @@ resource "aws_iam_policy" "ecr_policy" {
         Resource = "*"
       },
     ]
+  })
+}
+
+# IAMポリシーの作成（Lambda用）
+resource "aws_iam_policy" "lambda_policy" {
+  name        = "lambda_policy"
+  description = "IAM policy for Lambda to access Kinesis and S3"
+
+  policy = jsonencode({
+    Version = "2012-10-17",
+    Statement = [
+      {
+        Effect = "Allow",
+        Action = [
+          "kinesis:GetRecords",
+          "kinesis:GetShardIterator",
+          "kinesis:DescribeStream",
+          "kinesis:ListStreams",
+        ],
+        Resource = "*",
+      },
+      {
+        Effect = "Allow",
+        Action = [
+          "s3:PutObject",
+        ],
+        Resource = "arn:aws:s3:::example-bucket/*",
+      },
+    ],
   })
 }
