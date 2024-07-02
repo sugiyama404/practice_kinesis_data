@@ -47,8 +47,28 @@ module "ecs" {
   sg_ecs_id                   = module.network.sg_ecs_id
   subnet_private_subnet_1a_id = module.network.subnet_private_subnet_1a_id
   subnet_public_subnet_1a_id  = module.network.subnet_public_subnet_1a_id
-  aws_iam_role                = module.iam.aws_iam_role
+  ecs_iam_role                = module.iam.ecs_iam_role
   api_repository_url          = module.ecr.api_repository_url
   api_port                    = var.api_port
   http_arn                    = module.elb.http_arn
+}
+
+module "kinesis" {
+  source   = "./modules/kinesis"
+  app_name = var.app_name
+}
+
+module "lambda" {
+  source             = "./modules/lambda"
+  app_name           = var.app_name
+  lambda_iam_role    = module.iam.lambda_iam_role
+  kinesis_stream_arn = module.kinesis.kinesis_stream_arn
+  s3_bucket_name     = module.s3.s3_bucket_name
+}
+
+module "s3" {
+  source   = "./modules/s3"
+  app_name = var.app_name
+  region   = var.region
+
 }
