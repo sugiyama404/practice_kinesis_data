@@ -1,17 +1,16 @@
 {
-  "name": "nuxt-app",
-  "private": true,
-  "type": "module",
+  "name": "app",
+  "version": "1.0.0",
+  "description": "",
+  "main": "main.js",
   "scripts": {
-    "build": "nuxt build",
-    "dev": "nuxt dev",
-    "generate": "nuxt generate",
-    "preview": "nuxt preview",
-    "postinstall": "nuxt prepare"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "node main.js"
   },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
   "dependencies": {
-    "nuxt": "^3.11.2",
-    "vue": "^3.4.21",
-    "vue-router": "^4.3.0"
+    "express": "^4.17.1"
   }
 }

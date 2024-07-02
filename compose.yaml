@@ -1,12 +1,9 @@
 services:
   web:
     restart: always
-    build:
-      context: ./webserver
-      target: development
+    build: ./webserver
     container_name: "web_market"
-    # command: ["npm", "run", "dev"]
-    working_dir: /usr/src/app
+    command: ["npm", "run", "dev"]
     tty: true
     volumes:
       - ./webserver/app:/usr/src/app
