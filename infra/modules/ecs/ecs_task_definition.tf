@@ -22,9 +22,15 @@ resource "aws_ecs_task_definition" "MainDefinition" {
       environment = [
         {
           name  = "KINESIS_STREAM_NAME"
-          value = var.kinesis_stream_name
+          value = "${var.kinesis_stream_name}"
         },
       ]
+      healthCheck = {
+        command  = ["CMD-SHELL", "curl -f http://localhost:3000/ || exit 1"]
+        interval = 30
+        timeout  = 10
+        retries  = 5
+      }
     }
   ])
   runtime_platform {
