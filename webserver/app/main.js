@@ -1,31 +1,59 @@
 const express = require('express');
+const AWS = require('aws-sdk');
 const app = express();
 
+const kinesis = new AWS.Kinesis({ region: 'ap-northeast-1' });
+const streamName = process.env.KINESIS_STREAM_NAME || 'my-kinesis-stream';
+const usernames = ["John Smith", "Emma Brown", "David Lee", "john_doe", "jane_doe"];
+
+// Kinesisにデータを送信する関数
+function sendDataToKinesis(data) {
+    const params = {
+        Data: JSON.stringify(data),
+        PartitionKey: 'partitionKey', // 任意のパーティションキーを設定
+        StreamName: streamName
+    };
+
+    kinesis.putRecord(params, (err, data) => {
+        if (err) {
+            console.error('Error sending data to Kinesis:', err);
+        } else {
+            console.log('Successfully sent data to Kinesis:', data);
+        }
+    });
+}
+
+// 各ルートの設定
 const routes = [
-    { path: '/', message: 'ホーム画面です\n' },
-    { path: '/about', message: 'これはAboutページです\n' },
-    { path: '/contact', message: 'これはContactページです\n' },
-    { path: '/user/:id', message: 'ユーザーID: :id のプロフィールページです\n', dynamic: true },
-    { path: '/products', message: 'これはProductsページです\n' },
-    { path: '/services', message: 'これはServicesページです\n' },
-    { path: '/blog', message: 'これはBlogページです\n' },
-    { path: '/faq', message: 'これはFAQページです\n' },
-    { path: '/portfolio', message: 'これはPortfolioページです\n' }
+    { path: '/', action: 'index', message: 'ホーム画面です\n' },
+    { path: '/about', action: 'about', message: 'これはAboutページです\n' },
+    { path: '/contact', action: 'contact', message: 'これはContactページです\n' },
+    { path: '/products', action: 'products', message: 'これはProductsページです\n' },
+    { path: '/services', action: 'services', message: 'これはServicesページです\n' },
+    { path: '/blog', action: 'blog', message: 'これはBlogページです\n' },
+    { path: '/faq', action: 'faq', message: 'これはFAQページです\n' },
+    { path: '/portfolio', action: 'portfolio', message: 'これはPortfolioページです\n' }
 ];
 
+// 各ルートでKinesisにデータを送信
 routes.forEach(route => {
-    if (route.dynamic) {
-        app.get(route.path, (req, res) => {
-            const message = route.message.replace(':id', req.params.id);
-            res.send(message);
-        });
-    } else {
-        app.get(route.path, (req, res) => {
-            res.send(route.message);
-        });
-    }
+    app.get(route.path, (req, res) => {
+        res.send(route.message);
+        const randomIndex = Math.floor(Math.random() * usernames.length);
+
+        // Kinesisに送信するデータ
+        const data = {
+            name: usernames[randomIndex],
+            path: route.path,
+            action: route.action,
+            timestamp: new Date().toISOString()
+        };
+
+        // Kinesisにデータを送信
+        sendDataToKinesis(data);
+    });
 });
 
 app.listen(3000, () => {
-    console.log('サーバーがポート3000で起動しました');
+    console.log('Server is running on port 3000');
 });

@@ -1,8 +1,15 @@
 resource "aws_iam_policy_attachment" "ecr_attach" {
-  name       = "${var.app_name}_ecr_attach"
-  roles      = ["${aws_iam_role.main_role.name}"]
+  name       = "${var.app_name}-ecr-attach"
+  roles      = ["${aws_iam_role.ecs_role.name}"]
   policy_arn = aws_iam_policy.ecr_policy.arn
 }
+
+resource "aws_iam_policy_attachment" "kinesis_attach" {
+  name       = "${var.app_name}-kinesis-attach"
+  roles      = ["${aws_iam_role.ecs_role.name}"]
+  policy_arn = aws_iam_policy.kinesis_policy.arn
+}
+
 
 # IAMロールにポリシーをアタッチ
 resource "aws_iam_role_policy_attachment" "lambda_role_attachment" {

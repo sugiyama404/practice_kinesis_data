@@ -15,6 +15,24 @@ resource "aws_iam_policy" "ecr_policy" {
   })
 }
 
+resource "aws_iam_policy" "kinesis_policy" {
+  name = "${var.app_name}-kinesis-policy"
+
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Action = [
+          "kinesis:PutRecord",
+          "kinesis:PutRecords"
+        ]
+        Effect   = "Allow"
+        Resource = "${var.kinesis_stream_arn}"
+      },
+    ]
+  })
+}
+
 # IAMポリシーの作成（Lambda用）
 resource "aws_iam_policy" "lambda_policy" {
   name        = "lambda_policy"
