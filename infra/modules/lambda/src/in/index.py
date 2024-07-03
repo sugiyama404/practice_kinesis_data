@@ -7,7 +7,7 @@ import io
 s3 = boto3.client('s3')
 bucket_name = os.environ['BUCKET_NAME']
 
-def lambda_handler(event, context):
+def lambda_function(event, context):
     # Kinesisストリームからのイベントデータを処理する
     for record in event['Records']:
         # KinesisのデータはBase64でエンコードされているため、デコードする
@@ -27,7 +27,7 @@ def lambda_handler(event, context):
 
         # S3にデータをアップロードする
         s3.put_object(
-            Bucket=bucket_name,  # ここにあなたのS3バケット名を指定
+            Bucket=bucket_name,
             Key=object_key,
             Body=csv_buffer.getvalue()
         )
