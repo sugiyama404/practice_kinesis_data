@@ -19,6 +19,12 @@ resource "aws_ecs_task_definition" "MainDefinition" {
           hostPort      = var.api_port
         }
       ]
+      environment = [
+        {
+          name  = "KINESIS_STREAM_NAME"
+          value = var.kinesis_stream_name
+        },
+      ]
     }
   ])
   runtime_platform {

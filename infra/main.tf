@@ -14,8 +14,9 @@ provider "aws" {
 
 # IAM
 module "iam" {
-  source   = "./modules/iam"
-  app_name = var.app_name
+  source             = "./modules/iam"
+  app_name           = var.app_name
+  kinesis_stream_arn = module.kinesis.kinesis_stream_arn
 }
 
 # ECR
@@ -50,7 +51,7 @@ module "ecs" {
   ecs_iam_role                = module.iam.ecs_iam_role
   api_repository_url          = module.ecr.api_repository_url
   api_port                    = var.api_port
-  http_arn                    = module.elb.http_arn
+  kinesis_stream_name         = module.kinesis.kinesis_stream_name
 }
 
 module "kinesis" {

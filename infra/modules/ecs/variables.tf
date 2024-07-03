@@ -5,4 +5,4 @@ variable "ecs_iam_role" {}
 variable "app_name" {}
 variable "api_repository_url" {}
 variable "api_port" {}
-variable "http_arn" {}
+variable "kinesis_stream_name" {}
