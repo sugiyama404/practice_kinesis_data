@@ -38,7 +38,6 @@ const routes = [
 // 各ルートでKinesisにデータを送信
 routes.forEach(route => {
     app.get(route.path, (req, res) => {
-        res.send(route.message);
         const randomIndex = Math.floor(Math.random() * usernames.length);
 
         // Kinesisに送信するデータ
@@ -51,6 +50,9 @@ routes.forEach(route => {
 
         // Kinesisにデータを送信
         sendDataToKinesis(data);
+
+        // 画面送信
+        res.send(route.message);
     });
 });
 
