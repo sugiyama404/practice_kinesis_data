@@ -25,12 +25,21 @@ resource "aws_ecs_task_definition" "MainDefinition" {
           value = "${var.kinesis_stream_name}"
         },
       ]
-      healthCheck = {
-        command  = ["CMD-SHELL", "curl -f http://localhost:3000/ || exit 1"]
-        interval = 30
-        timeout  = 10
-        retries  = 5
+      logConfiguration = {
+        logDriver = "awslogs"
+        options = {
+          awslogs-region        = "ap-northeast-1"
+          awslogs-stream-prefix = "${var.app_name}"
+          awslogs-create-group  = "true"
+          awslogs-group         = "/fargate/${var.app_name}/dev"
+        }
       }
+      # healthCheck = {
+      #   command  = ["CMD-SHELL", "curl -f http://localhost:3000/ || exit 1"]
+      #   interval = 30
+      #   timeout  = 10
+      #   retries  = 5
+      # }
     }
   ])
   runtime_platform {
