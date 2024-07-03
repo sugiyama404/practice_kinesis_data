@@ -5,7 +5,7 @@ resource "aws_ecs_service" "MainService" {
   desired_count   = 1
 
   network_configuration {
-    security_groups  = [var.sg_ecs_id]
+    security_groups  = ["${var.sg_ecs_id}"]
     subnets          = ["${var.subnet_public_subnet_1a_id}"]
     assign_public_ip = true
   }
