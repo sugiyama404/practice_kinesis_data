@@ -21,3 +21,9 @@ variable "api_port" {
   type        = number
   default     = 3000
 }
+
+variable "lambda_function_name" {
+  description = "lambda function name"
+  type        = string
+  default     = "lambda_function"
+}
