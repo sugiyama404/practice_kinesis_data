@@ -1,8 +1,6 @@
-import csv
 import boto3
 import base64
 import os
-import io
 import datetime
 
 s3 = boto3.client('s3')
@@ -18,8 +16,6 @@ def lambda_handler(event, context):
     try:
         existing_object = s3.get_object(Bucket=bucket_name, Key=object_key)
         existing_data = existing_object['Body'].read().decode('utf-8')
-        print("Existing data in S3:")
-        print(existing_data)
     except s3.exceptions.NoSuchKey:
         existing_data = ''
 
@@ -30,7 +26,6 @@ def lambda_handler(event, context):
         print("Decoded payload: " + payload)
 
         # payloadをCSVフォーマットに変換する
-        # ここでは簡単な例として、payloadがカンマ区切りの値であることを想定します
         new_row = payload.split(',')
 
         # 既存のデータに新しい行を追加する

@@ -1,4 +1,3 @@
-# Lambda Permissionの設定
 resource "aws_lambda_permission" "allow_kinesis_invoke" {
   statement_id  = "AllowExecutionFromKinesis"
   action        = "lambda:InvokeFunction"

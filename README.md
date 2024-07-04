@@ -1,4 +1,4 @@
-# S3、ECS Fargate、Kinesisを活用したWebアプリのリアルタイムデータ解析基盤構築
+# Kinesis data streams、lambda、S3を活用したWebアプリのリアルタイムデータ解析基盤構築
 
 <p align="center">
   <img src="sources/aws.png" alt="animated" width="400">
@@ -59,8 +59,11 @@ s3に以下のCSVが作成されました。
 </p>
 
 
+# Qiita記事
 
+技術詳細はQiitaに記載しています。
 
+[Kinesis data streams、lambda、S3を活用したWebアプリのリアルタイムデータ解析基盤構築](https://qiita.com/sugiyama404/items/dcd44098fb19ebd8d411)
 
 
 
