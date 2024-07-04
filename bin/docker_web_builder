@@ -1,0 +1,30 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+function docker_web_builder() {
+  local cwd="$1"
+  local image_name
+  cd "${cwd}"
+  cd webserver
+
+  env_dir="${cwd}/bin/conf/.env"
+
+  # shellcheck source=/dev/null
+  source "${env_dir}"
+
+  image_name=$(grep -v '^image_name=\K.*$' "${env_dir}" | cut -d '=' -f2 || read -p -r "Enter image name: ")
+
+  echo "${image_name}:latest"
+  docker build -t "${image_name}:latest" .
+}
+
+function main() {
+  local cwd
+  cwd="$(cd "$(dirname "$0")/.." && pwd)"
+  docker_web_builder "${cwd}"
+}
+
+if [[ "${BASH_SOURCE[0]}" == "${0}" ]]; then
+  main "$@"
+fi
