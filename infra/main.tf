@@ -17,6 +17,7 @@ module "iam" {
   source             = "./modules/iam"
   app_name           = var.app_name
   kinesis_stream_arn = module.kinesis.kinesis_stream_arn
+  s3_bucket_name     = module.s3.s3_bucket_name
 }
 
 # ECR
@@ -60,11 +61,12 @@ module "kinesis" {
 }
 
 module "lambda" {
-  source             = "./modules/lambda"
-  app_name           = var.app_name
-  lambda_iam_role    = module.iam.lambda_iam_role
-  kinesis_stream_arn = module.kinesis.kinesis_stream_arn
-  s3_bucket_name     = module.s3.s3_bucket_name
+  source               = "./modules/lambda"
+  app_name             = var.app_name
+  lambda_iam_role      = module.iam.lambda_iam_role
+  kinesis_stream_arn   = module.kinesis.kinesis_stream_arn
+  s3_bucket_name       = module.s3.s3_bucket_name
+  lambda_function_name = var.lambda_function_name
 }
 
 module "s3" {

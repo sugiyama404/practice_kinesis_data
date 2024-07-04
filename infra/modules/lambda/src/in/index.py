@@ -3,11 +3,26 @@ import boto3
 import base64
 import os
 import io
+import datetime
 
 s3 = boto3.client('s3')
 bucket_name = os.environ['BUCKET_NAME']
 
-def lambda_function(event, context):
+today = datetime.date.today()
+formatted_date = today.strftime("%Y-%m-%d")
+
+def lambda_handler(event, context):
+    object_key = 'data_from_kinesis/record_{}.csv'.format(formatted_date)
+
+    # S3に既存のファイルがあるか確認する
+    try:
+        existing_object = s3.get_object(Bucket=bucket_name, Key=object_key)
+        existing_data = existing_object['Body'].read().decode('utf-8')
+        print("Existing data in S3:")
+        print(existing_data)
+    except s3.exceptions.NoSuchKey:
+        existing_data = ''
+
     # Kinesisストリームからのイベントデータを処理する
     for record in event['Records']:
         # KinesisのデータはBase64でエンコードされているため、デコードする
@@ -16,21 +31,17 @@ def lambda_function(event, context):
 
         # payloadをCSVフォーマットに変換する
         # ここでは簡単な例として、payloadがカンマ区切りの値であることを想定します
-        csv_buffer = io.StringIO()
-        csv_writer = csv.writer(csv_buffer)
+        new_row = payload.split(',')
 
-        # デコードされたpayloadをリストとして渡します（ここでは簡単なカンマ区切りを想定）
-        csv_writer.writerow(payload.split(','))
+        # 既存のデータに新しい行を追加する
+        existing_data += ','.join(new_row) + '\n'
 
-        # S3にアップロードするためのオブジェクトキーを作成
-        object_key = 'data_from_kinesis/record_{}.csv'.format(record['eventID'])
-
-        # S3にデータをアップロードする
-        s3.put_object(
-            Bucket=bucket_name,
-            Key=object_key,
-            Body=csv_buffer.getvalue()
-        )
+    # 更新したデータをS3に保存する
+    s3.put_object(
+        Bucket=bucket_name,
+        Key=object_key,
+        Body=existing_data.encode('utf-8')
+    )
 
     return {
         'statusCode': 200,

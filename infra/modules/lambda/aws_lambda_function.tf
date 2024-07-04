@@ -6,7 +6,7 @@ data "archive_file" "lambda" {
 
 resource "aws_lambda_function" "main" {
   filename         = "./modules/lambda/src/out/lambda_function_payload.zip"
-  function_name    = "lambda_function"
+  function_name    = var.lambda_function_name
   description      = "lambda_function"
   role             = var.lambda_iam_role
   architectures    = ["x86_64"]
@@ -18,7 +18,7 @@ resource "aws_lambda_function" "main" {
 
   environment {
     variables = {
-      BUKET_NAME = var.s3_bucket_name
+      BUCKET_NAME = var.s3_bucket_name
     }
   }
   tags = {

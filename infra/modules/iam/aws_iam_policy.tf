@@ -72,8 +72,14 @@ resource "aws_iam_policy" "lambda_policy" {
         Effect = "Allow",
         Action = [
           "s3:PutObject",
+          "s3:PutObjectAcl",
+          "s3:GetObject",
+          "s3:ListBucket"
         ],
-        Resource = "arn:aws:s3:::example-bucket/*",
+        Resource = [
+          "arn:aws:s3:::${var.s3_bucket_name}",
+          "arn:aws:s3:::${var.s3_bucket_name}/*"
+        ],
       },
     ],
   })
